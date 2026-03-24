@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
   generateName: nurc-tts-training-
-  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.22, pipelines.kubeflow.org/pipeline_compilation_time: '2026-03-24T10:27:49.908635',
+  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.22, pipelines.kubeflow.org/pipeline_compilation_time: '2026-03-24T15:21:39.706300',
     pipelines.kubeflow.org/pipeline_spec: '{"description": "NURC TTS.", "name": "NURC
       TTS Training"}'}
   labels: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.22}
@@ -13,7 +13,7 @@ spec:
     container:
       command: [python, recipes/multilingual/cml_yourtts/train_syntacc.py, --config_path
           "/app/recipes/multilingual/cml_yourtts/config.json"]
-      image: sidleal/nurc-tts-training:0.1
+      image: sidleal/nurc-tts-training:0.2
       resources:
         limits: {cpu: '4', memory: 32Gi, nvidia.com/mig-2g.20gb: '1'}
         requests: {cpu: '4', memory: 32Gi}
