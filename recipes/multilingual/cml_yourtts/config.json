@@ -1,5 +1,5 @@
 {
-    "output_path": "/scratch/amatos/syntacc/TTS/NURC/runs",
+    "output_path": "/opt/training/syntacc/TTS/NURC/runs",
     "logger_uri": "s3://coqui-ai-models/TTS/Checkpoints/YourTTS/NURC/",
     "run_name": "YourTTS-Syntacc-PT_NURC",
     "project_name": "SYNTACC",
@@ -103,7 +103,7 @@
         {
             "formatter": "coqui",
             "dataset_name": "nurc_tts",
-            "path": "/scratch/amatos/syntacc/datasets/nurc_tts/sao_paulo",
+            "path": "/opt/training/syntacc/datasets/nurc_tts/sao_paulo",
             "meta_file_train": "metadata_coqui_sao_paulo.csv",
             "ignored_speakers": null,
             "language": "sao_paulo",
@@ -114,7 +114,7 @@
         {
             "formatter": "coqui",
             "dataset_name": "nurc_tts",
-            "path": "/scratch/amatos/syntacc/datasets/nurc_tts/recife",
+            "path": "/opt/training/syntacc/datasets/nurc_tts/recife",
             "meta_file_train": "metadata_coqui_recife.csv",
             "ignored_speakers": null,
             "language": "recife",
@@ -212,10 +212,10 @@
         "use_spectral_norm_disriminator": false,
         "use_speaker_embedding": false,
         "num_speakers": 0,
-        "speakers_file": "/scratch/amatos/syntacc/TTS/NURC/runs/YourTTS-Syntacc-PT_NURC/speakers.pth",
+        "speakers_file": "/opt/training/syntacc/TTS/NURC/runs/YourTTS-Syntacc-PT_NURC/speakers.pth",
         "d_vector_file": [
-            "/scratch/amatos/syntacc/datasets/nurc_tts/sao_paulo/H_ASP_speaker_embeddings_sao_paulo.pth",
-            "/scratch/amatos/syntacc/datasets/nurc_tts/recife/H_ASP_speaker_embeddings_recife.pth"
+            "/opt/training/syntacc/datasets/nurc_tts/sao_paulo/H_ASP_speaker_embeddings_sao_paulo.pth",
+            "/opt/training/syntacc/datasets/nurc_tts/recife/H_ASP_speaker_embeddings_recife.pth"
         ],
         "speaker_embedding_channels": 256,
         "use_d_vector_file": true,
@@ -224,7 +224,7 @@
         "use_language_embedding": false,
         "embedded_language_dim": 4,
         "num_languages": 0,
-        "language_ids_file": "/scratch/amatos/syntacc/TTS/recipes/multilingual/cml_yourtts/languages_ids.json",
+        "language_ids_file": "/opt/training/syntacc/TTS/recipes/multilingual/cml_yourtts/languages_ids.json",
         "use_speaker_encoder_as_loss": false,
         "speaker_encoder_config_path": "https://github.com/coqui-ai/TTS/releases/download/speaker_encoder_model/config_se.json",
         "speaker_encoder_model_path": "https://github.com/coqui-ai/TTS/releases/download/speaker_encoder_model/model_se.pth.tar",
@@ -267,14 +267,14 @@
     "r": 1,
     "num_speakers": 0,
     "use_speaker_embedding": false,
-    "speakers_file": "/scratch/amatos/syntacc/TTS/NURC/runs/YourTTS-Syntacc-PT_NURC/speakers.pth",
+    "speakers_file": "/opt/training/syntacc/TTS/NURC/runs/YourTTS-Syntacc-PT_NURC/speakers.pth",
     "speaker_embedding_channels": 256,
-    "language_ids_file": "/scratch/amatos/syntacc/TTS/recipes/multilingual/cml_yourtts/languages_ids.json",
+    "language_ids_file": "/opt/training/syntacc/TTS/recipes/multilingual/cml_yourtts/languages_ids.json",
     "use_language_embedding": false,
     "use_d_vector_file": true,
     "d_vector_file": [
-        "/scratch/amatos/syntacc/datasets/nurc_tts/sao_paulo/H_ASP_speaker_embeddings_sao_paulo.pth",
-        "/scratch/amatos/syntacc/datasets/nurc_tts/recife/H_ASP_speaker_embeddings_recife.pth"
+        "/opt/training/syntacc/datasets/nurc_tts/sao_paulo/H_ASP_speaker_embeddings_sao_paulo.pth",
+        "/opt/training/syntacc/datasets/nurc_tts/recife/H_ASP_speaker_embeddings_recife.pth"
     ],
     "d_vector_dim": 512
 }
