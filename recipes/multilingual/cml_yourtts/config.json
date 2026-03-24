@@ -125,10 +125,10 @@
     ],
     "test_sentences": [
 
-    ["ao se ligar a quest\u00e3o de ser maternal e s\u00e9ria at\u00e9 quando escolhem como s\u00edmbolo","Inf-ue",null,"recife"],
-    ["agora com essa explana\u00e7\u00e3o eu apresentei e essa frase","Inf.416 - ue",null,"recife"],
-    ["e n\u00f3s mesmo devemos nos interessar.","SPEAKER 0",null,"sao_paulo"],
-    ["e medicina, como eu falei a voc\u00eas, se existe, uh, processo de multiplica\u00e7\u00e3o, porque eles","SPEAKER 1",null,"sao_paulo"]
+    ["uma muito bonita por sinal coreograficamente falando mas ela dan\u00e7a se olhando","NURC_RE_EF_346_Inf-ue",null,"recife"],
+    ["dois a dois e de um pra outro ou seja nem nem dois a dois","NURC_RE_D2_005_Inf1-ue",null,"recife"],
+    ["tipo moca, isso tem algum... n\u00e3o, moca n\u00e3o n\u00e3o tem nada com gosto.","SP_D2_015_SPEAKER 1",null,"sao_paulo"],
+    ["e n\u00f3s mesmo devemos nos interessar.","SP_EF_406_SPEAKER 0",null,"sao_paulo"]
     ],  
     "eval_split_max_size": 256,
     "eval_split_size": 0.01,

@@ -530,12 +530,12 @@ config = VitsConfig(
     mixed_precision=False,
     test_sentences=[
                 #GUSTAVO: apenas pessoas do treino
-        ["muito bom. quais são as fases, todas as fases da da cultura do caf\u00e9?","SPEAKER 1", None, "sao_paulo"],
-        ["e temos a roxa comum e temos a e roxa misturada com areia.","SPEAKER 2", None, "sao_paulo"],
-        ["seria o filho adotivo, n\u00e9? e os pais adotivos.", "SPEAKER 1", None, "sao_paulo"],
-        ["voc\u00eas podem falar \u00e0 vontade conversar entre si"," Doc-ue",None,"recife"],
-        ["proliferavam em grande escala porque com as explos\u00f5es at\u00f4micas e com o advento","Inf1-ue",None,"recife"],
-        ["\u00e9 senhoras eu j\u00e1 vi muito esse caso senhoras que chegam recatad\u00edssimas"," Inf-ue",None,"recife"],
+        ["e cinco litros. o alqueire de s\u00e3o paulo? qual \u00e9 o tamanho dele? n\u00e3o, o alqueire","SP_D2_015_SPEAKER 1", None, "sao_paulo"],
+        ["o gado de noite comia o capim e fabricava esterco. ent\u00e3o aqui","SP_D2_015_SPEAKER 2", None, "sao_paulo"],
+        ["ent\u00e3o a carpa \u00e9 um \u00e9 um mato um pouco maior, mais volumoso, n\u00e9.", "SP_D2_015_SPEAKER 3", None, "sao_paulo"],
+        ["voc\u00eas podem falar \u00e0 vontade conversar entre si","NURC_RE_D2_005_Doc-ue",None,"recife"],
+        ["\u00e9 uma coisa mais ou menos assim mam\u00e3e \u00e9 quem faz eu nunca fa\u00e7o n\u00e3o","NURC_RE_D2_008_Inf1-ue",None,"recife"],
+        ["agora pronto depois voc\u00ea descobrir mais outro tamb\u00e9m"," NURC_RE_D2_008_Inf2-ue",None,"recife"],
         # ["falaremos sobre agricultura, n\u00c1?","SPEAKER 1", None, "sao_paulo"],
         # ["e se pagava, apenas a cada dois meses","SPEAKER 2", None, "sao_paulo"],
         # ["ele det\u00e9m a propriedade da empresa.", "SPEAKER 0", None, "sao_paulo"],
