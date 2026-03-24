@@ -46,14 +46,14 @@ BATCH_SIZE = 26
 
 # Training Sampling rate and the target sampling rate for resampling the downloaded dataset (Note: If you change this you might need to redownload the dataset !!)
 # Note: If you add new datasets, please make sure that the dataset sampling rate and this parameter are matching, otherwise resample your audios
-SAMPLE_RATE = 16000
+SAMPLE_RATE = 44000
 
 
 DASHBOARD_LOGGER="tensorboard"
 LOGGER_URI = None 
 
-DASHBOARD_LOGGER = "clearml"
-LOGGER_URI = "s3://coqui-ai-models/TTS/Checkpoints/YourTTS/NURC/"
+# DASHBOARD_LOGGER = "clearml"
+# LOGGER_URI = "s3://coqui-ai-models/TTS/Checkpoints/YourTTS/NURC/"
 
 
 
@@ -137,7 +137,6 @@ def _run_from_config_path_if_provided() -> bool:
     )
 
     model = setup_model(config, train_samples + eval_samples)
-
     trainer = Trainer(
         train_args,
         model.config,
@@ -147,8 +146,23 @@ def _run_from_config_path_if_provided() -> bool:
         eval_samples=eval_samples,
         parse_command_line_args=False,
     )
-    trainer.fit()
+    print(">>> TRAINING OVERVIEW")
+    print(f">>> run_name={config.run_name}")
+    print(f">>> output_path={config.output_path}")
+    print(f">>> train_samples={len(train_samples)} eval_samples={len(eval_samples)}")
+    print(
+        f">>> batch_size(train/eval)={config.batch_size}/{config.eval_batch_size} "
+        f"print_step={config.print_step} save_step={config.save_step}"
+    )
+    print(">>> Starting trainer.fit()")
+    try:
+        trainer.fit()
+        print(">>> trainer.fit() finished successfully")
+    except Exception as exc:
+        print(f">>> trainer.fit() stopped with exception: {type(exc).__name__}: {exc}")
+        raise
     return True
+
 
 
 def _slugify_filename(text: str) -> str:
@@ -400,7 +414,7 @@ for dataset_conf in DATASETS_CONFIG_LIST:
     # Check if the embeddings weren't already computed, if not compute it
     embeddings_file = os.path.join(dataset_conf.path, f"H_ASP_speaker_embeddings_{dataset_conf.language}.pth")
     if not os.path.isfile(embeddings_file):
-        print(f">>> Computing the speaker embeddings for the {dataset_conf.dataset_name} dataset")
+        print(f">>>AQUI ESTA COMPUTANDO OS EMBEDDINGS: Computing the speaker embeddings for the {dataset_conf.dataset_name} dataset")
         compute_embeddings(
             SPEAKER_ENCODER_CHECKPOINT_PATH,
             SPEAKER_ENCODER_CONFIG_PATH,
@@ -558,4 +572,19 @@ trainer = Trainer(
     train_samples=train_samples,
     eval_samples=eval_samples,
 )
-trainer.fit()
+print(">>> TRAINING OVERVIEW")
+print(f">>>AQUI ESTA O RUN_NAME: run_name={config.run_name}")
+print(f">>>AQUI ESTA O OUTPUT_PATH: output_path={OUT_PATH}")
+print(f">>>AQUI ESTA O TRAIN_SAMPLES: train_samples={len(train_samples)}")
+print(f">>>AQUI ESTA O EVAL_SAMPLES: eval_samples={len(eval_samples)}")
+print(
+    f">>> batch_size(train/eval)={config.batch_size}/{config.eval_batch_size} "
+    f"print_step={config.print_step} save_step={config.save_step}"
+)
+print(">>>\o/\o/ Starting trainer.fit()")
+try:
+    trainer.fit()
+    print(">>> \O/\O/ trainer.fit() finished successfully")
+except Exception as exc:
+    print(f">>> DEU RUIM, trainer.fit() stopped with exception: {type(exc).__name__}: {exc}")
+    raise
