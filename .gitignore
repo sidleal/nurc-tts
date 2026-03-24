@@ -170,3 +170,5 @@ depot/*
 coqui_recipes/*
 local_scripts/*
 coqui_demos/*
+checkpoints_yourtts_cml_tts_dataset/*
+
