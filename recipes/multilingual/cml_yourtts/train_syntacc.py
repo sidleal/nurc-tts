@@ -216,7 +216,15 @@ def prepare_nurc_tts_split(split_name: str, output_root: str, max_samples: int =
                 if not text or audio is None:
                     continue
 
-                speaker_name = _sanitize_speaker_name(item.get("speaker", "unknown"))
+                raw_speaker_name = (item.get("speaker") or "unknown").strip()
+                combined_speaker_name = (
+                    f"{inquiry_id}_{raw_speaker_name}" if inquiry_id else raw_speaker_name
+                )
+                speaker_name = _sanitize_speaker_name(combined_speaker_name)
+                print(
+                    f">>>AQUI ESTA O SPEAKER_NAME: inquiry={inquiry_id or 'unknown'} "
+                    f"speaker={raw_speaker_name} -> {speaker_name}"
+                )
                 if sample_speaker is None:
                     sample_speaker = speaker_name
 
