@@ -175,6 +175,10 @@ def _sanitize_speaker_name(speaker_name: str) -> str:
     return safe or "unknown"
 
 
+def _normalize_metadata_text(text: str) -> str:
+    return re.sub(r"\s+", " ", (text or "").replace("|", " ")).strip()
+
+
 def _write_wav_int16(file_path: Path, audio_array, sample_rate: int) -> None:
     waveform = torch.tensor(audio_array, dtype=torch.float32).clamp(-1.0, 1.0)
     pcm = (waveform * 32767.0).to(torch.int16).numpy().tobytes()
@@ -218,6 +222,7 @@ def prepare_nurc_tts_split(split_name: str, output_root: str, max_samples: int =
         dataset = load_dataset(HF_DATASET_ID, split=split_name)
         with metadata_path.open("w", encoding="utf-8", newline="") as metadata_file:
             writer = csv.writer(metadata_file, delimiter="|")
+            writer.writerow(["audio_file", "text", "speaker_name"])
             total_written = 0
             total_skipped_inquiry = 0
             total_skipped_audio = 0
@@ -230,7 +235,7 @@ def prepare_nurc_tts_split(split_name: str, output_root: str, max_samples: int =
                     total_skipped_inquiry += 1
                     continue
 
-                text = (item.get("text") or "").strip()
+                text = _normalize_metadata_text(item.get("text") or "")
                 audio = item.get("audio")
                 if not text or audio is None:
                     continue
@@ -273,7 +278,9 @@ def prepare_nurc_tts_split(split_name: str, output_root: str, max_samples: int =
     else:
         print(f">>> Reusing existing metadata for split '{split_name}' at {metadata_path}")
         with metadata_path.open("r", encoding="utf-8") as metadata_file:
-            for line in metadata_file:
+            for line_number, line in enumerate(metadata_file):
+                if line_number == 0:
+                    continue
                 cols = line.strip().split("|")
                 if len(cols) >= 3 and cols[2]:
                     sample_speaker = cols[2]
