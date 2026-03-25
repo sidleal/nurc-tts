@@ -185,6 +185,24 @@ def _write_wav_int16(file_path: Path, audio_array, sample_rate: int) -> None:
         wav_file.writeframes(pcm)
 
 
+def _decode_audio_or_none(audio, split_name: str, index: int, segment_name: str):
+    try:
+        audio_array = audio["array"]
+        sample_rate = int(audio["sampling_rate"])
+    except Exception as exc:
+        print(
+            f">>>DECODE ERROR !O!O!\O/|>> Skipping sample {split_name}[{index}] ({segment_name}) due to audio decode error: "
+            f"{type(exc).__name__}: {exc}"
+        )
+        return None, None
+
+    if audio_array is None or len(audio_array) == 0:
+        print(f">>> Skipping sample {split_name}[{index}] ({segment_name}) because audio is empty.")
+        return None, None
+
+    return audio_array, sample_rate
+
+
 def prepare_nurc_tts_split(split_name: str, output_root: str, max_samples: int = None):
     split_root = Path(output_root) / split_name
     wav_root = split_root / "wavs"
@@ -202,6 +220,7 @@ def prepare_nurc_tts_split(split_name: str, output_root: str, max_samples: int =
             writer = csv.writer(metadata_file, delimiter="|")
             total_written = 0
             total_skipped_inquiry = 0
+            total_skipped_audio = 0
             for index, item in enumerate(dataset):
                 if max_samples is not None and total_written >= max_samples:
                     break
@@ -235,15 +254,21 @@ def prepare_nurc_tts_split(split_name: str, output_root: str, max_samples: int =
                 rel_audio_path = f"wavs/{file_name}"
                 abs_audio_path = split_root / rel_audio_path
 
+                audio_array, sample_rate = _decode_audio_or_none(audio, split_name, index, file_name)
+                if audio_array is None:
+                    total_skipped_audio += 1
+                    continue
+
                 if not abs_audio_path.exists():
-                    _write_wav_int16(abs_audio_path, audio["array"], int(audio["sampling_rate"]))
+                    _write_wav_int16(abs_audio_path, audio_array, sample_rate)
 
                 writer.writerow([rel_audio_path, text, speaker_name])
                 total_written += 1
 
         print(
             f">>> Wrote {total_written} samples for split '{split_name}' at {split_root} "
-            f"(skipped {total_skipped_inquiry} excluded inquiry samples)"
+            f"(skipped {total_skipped_inquiry} excluded inquiry samples, "
+            f"{total_skipped_audio} decode-failing/empty samples)"
         )
     else:
         print(f">>> Reusing existing metadata for split '{split_name}' at {metadata_path}")
