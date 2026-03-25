@@ -6,7 +6,7 @@ from kubernetes import client as k8s_client
 def syntacc_tts_task(n_gpus: int):
     comp = dsl.ContainerOp(
         name='nurc-tts-train-task',
-        image='sidleal/nurc-tts-training:0.2',
+        image='sidleal/nurc-tts-training:0.4',
         command=['python', 'recipes/multilingual/cml_yourtts/train_syntacc.py', '--config_path "/app/recipes/multilingual/cml_yourtts/config.json"'],
         #python3 recipes/multilingual/cml_yourtts/train_syntacc.py --config_path "/app/recipes/multilingual/cml_yourtts/config.json"
         #command=["torchrun", f"--nproc-per-node={n_gpus}", "distil-whisper-train.py"],
