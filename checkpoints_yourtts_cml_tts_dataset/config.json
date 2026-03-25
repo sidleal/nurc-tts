@@ -1,0 +1,472 @@
+{
+    "output_path": "./checkpoints/yourtts_multilingual/",
+    "logger_uri": null,
+    "run_name": "yourtts-du_en_fr_ge_it_pl_ptbr_sp",
+    "project_name": null,
+    "run_description": "",
+    "print_step": 25,
+    "plot_step": 100,
+    "model_param_stats": false,
+    "wandb_entity": null,
+    "dashboard_logger": "tensorboard",
+    "log_model_step": 10000,
+    "save_step": 10000,
+    "save_n_checkpoints": 5,
+    "save_checkpoints": true,
+    "save_all_best": false,
+    "save_best_after": 10000,
+    "target_loss": null,
+    "print_eval": true,
+    "test_delay_epochs": -1,
+    "run_eval": true,
+    "distributed_backend": "nccl",
+    "distributed_url": "tcp://localhost:54321",
+    "mixed_precision": false,
+    "epochs": 1000,
+    "batch_size": 60,
+    "eval_batch_size": 60,
+    "grad_clip": [
+        5.0,
+        5.0
+    ],
+    "scheduler_after_epoch": true,
+    "lr": 0.001,
+    "optimizer": "AdamW",
+    "optimizer_params": {
+        "betas": [
+            0.8,
+            0.99
+        ],
+        "eps": 1e-09,
+        "weight_decay": 0.01
+    },
+    "lr_scheduler": "",
+    "lr_scheduler_params": null,
+    "use_grad_scaler": false,
+    "cudnn_enable": true,
+    "cudnn_deterministic": false,
+    "cudnn_benchmark": false,
+    "training_seed": 54321,
+    "model": "vits",
+    "num_loader_workers": 4,
+    "num_eval_loader_workers": 4,
+    "use_noise_augment": false,
+    "audio": {
+        "fft_size": 1024,
+        "win_length": 1024,
+        "hop_length": 256,
+        "frame_shift_ms": null,
+        "frame_length_ms": null,
+        "stft_pad_mode": "reflect",
+        "sample_rate": 24000,
+        "resample": false,
+        "preemphasis": 0.0,
+        "ref_level_db": 20,
+        "do_sound_norm": false,
+        "log_func": "np.log",
+        "do_trim_silence": true,
+        "trim_db": 45,
+        "do_rms_norm": false,
+        "db_level": null,
+        "power": 1.5,
+        "griffin_lim_iters": 60,
+        "num_mels": 80,
+        "mel_fmin": 0.0,
+        "mel_fmax": null,
+        "spec_gain": 1,
+        "do_amp_to_db_linear": false,
+        "do_amp_to_db_mel": true,
+        "pitch_fmax": 640.0,
+        "pitch_fmin": 0.0,
+        "signal_norm": false,
+        "min_level_db": -100,
+        "symmetric_norm": true,
+        "max_norm": 4.0,
+        "clip_norm": true,
+        "stats_path": null
+    },
+    "use_phonemes": false,
+    "phonemizer": null,
+    "phoneme_language": "pt-br",
+    "compute_input_seq_cache": false,
+    "text_cleaner": "multilingual_cleaners",
+    "enable_eos_bos_chars": false,
+    "test_sentences_file": "",
+    "phoneme_cache_path": null,
+    "characters": {
+        "characters_class": "TTS.tts.models.vits.VitsCharacters",
+        "vocab_dict": null,
+        "pad": "_",
+        "eos": "&",
+        "bos": "*",
+        "blank": null,
+        "characters": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz\u00a1\u00a3\u00b7\u00b8\u00c0\u00c1\u00c2\u00c3\u00c4\u00c5\u00c7\u00c8\u00c9\u00ca\u00cb\u00cc\u00cd\u00ce\u00cf\u00d1\u00d2\u00d3\u00d4\u00d5\u00d6\u00d9\u00da\u00db\u00dc\u00df\u00e0\u00e1\u00e2\u00e3\u00e4\u00e5\u00e7\u00e8\u00e9\u00ea\u00eb\u00ec\u00ed\u00ee\u00ef\u00f1\u00f2\u00f3\u00f4\u00f5\u00f6\u00f9\u00fa\u00fb\u00fc\u0101\u0104\u0105\u0106\u0107\u010b\u0119\u0141\u0142\u0143\u0144\u0152\u0153\u015a\u015b\u0161\u0178\u0179\u017a\u017b\u017c\u020e\u04e7\u05c2\u1b20",
+        "punctuations": "\u2014!'(),-.:;?\u00bf ",
+        "phonemes": "iy\u0268\u0289\u026fu\u026a\u028f\u028ae\u00f8\u0258\u0259\u0275\u0264o\u025b\u0153\u025c\u025e\u028c\u0254\u00e6\u0250a\u0276\u0251\u0252\u1d7b\u0298\u0253\u01c0\u0257\u01c3\u0284\u01c2\u0260\u01c1\u029bpbtd\u0288\u0256c\u025fk\u0261q\u0262\u0294\u0274\u014b\u0272\u0273n\u0271m\u0299r\u0280\u2c71\u027e\u027d\u0278\u03b2fv\u03b8\u00f0sz\u0283\u0292\u0282\u0290\u00e7\u029dx\u0263\u03c7\u0281\u0127\u0295h\u0266\u026c\u026e\u028b\u0279\u027bj\u0270l\u026d\u028e\u029f\u02c8\u02cc\u02d0\u02d1\u028dw\u0265\u029c\u02a2\u02a1\u0255\u0291\u027a\u0267\u025a\u02de\u026b'\u0303' ",
+        "is_unique": true,
+        "is_sorted": true
+    },
+    "add_blank": true,
+    "batch_group_size": 0,
+    "loss_masking": null,
+    "sort_by_audio_len": false,
+    "min_audio_len": 1,
+    "max_audio_len": Infinity,
+    "min_text_len": 1,
+    "max_text_len": Infinity,
+    "compute_f0": false,
+    "compute_linear_spec": true,
+    "precompute_num_workers": 0,
+    "start_by_longest": false,
+    "datasets": [
+        {
+            "name": "libri_tts",
+            "path": "./datasets/LibriTTS-100-360/LibriTTS-360/train-clean-360/",
+            "meta_file_train": "",
+            "ignored_speakers": null,
+            "language": "en",
+            "meta_file_val": "",
+            "meta_file_attn_mask": ""
+        },
+        {
+            "name": "brspeech",
+            "path": "./datasets/cml_tts_dataset_polish_v0.1/",
+            "meta_file_train": "train.csv",
+            "ignored_speakers": null,
+            "language": "pl",
+            "meta_file_val": null,
+            "meta_file_attn_mask": null
+        },
+        {
+            "name": "brspeech",
+            "path": "./datasets/cml_tts_dataset_portuguese_v0.1/",
+            "meta_file_train": "train.csv",
+            "ignored_speakers": null,
+            "language": "pt-br",
+            "meta_file_val": null,
+            "meta_file_attn_mask": null
+        },
+        {
+            "name": "brspeech",
+            "path": "./datasets/cml_tts_dataset_italian_v0.1/",
+            "meta_file_train": "train.csv",
+            "ignored_speakers": null,
+            "language": "it",
+            "meta_file_val": null,
+            "meta_file_attn_mask": null
+        },
+        {
+            "name": "brspeech",
+            "path": "./datasets/cml_tts_dataset_french_v0.1/",
+            "meta_file_train": "train.csv",
+            "ignored_speakers": null,
+            "language": "fr",
+            "meta_file_val": null,
+            "meta_file_attn_mask": null
+        },
+        {
+            "name": "brspeech",
+            "path": "./datasets/cml_tts_dataset_dutch_v0.1/",
+            "meta_file_train": "train.csv",
+            "ignored_speakers": null,
+            "language": "du",
+            "meta_file_val": null,
+            "meta_file_attn_mask": null
+        },
+        {
+            "name": "brspeech",
+            "path": "./datasets/cml_tts_dataset_german_v0.1/",
+            "meta_file_train": "train.csv",
+            "ignored_speakers": null,
+            "language": "ge",
+            "meta_file_val": null,
+            "meta_file_attn_mask": null
+        },
+        {
+            "name": "brspeech",
+            "path": "./datasets/ml_tts_dataset_spanish_v0.1/",
+            "meta_file_train": "train.csv",
+            "ignored_speakers": null,
+            "language": "sp",
+            "meta_file_val": null,
+            "meta_file_attn_mask": null
+        }
+    ],
+    "test_sentences": [
+        [
+            "Voc\u00ea ter\u00e1 a vista do topo da montanha que voc\u00ea escalar.",
+            "9351\n",
+            null,
+            "pt-br"
+        ],
+        [
+            "Quando voc\u00ea n\u00e3o corre nenhum risco, voc\u00ea arrisca tudo.",
+            "12249\n",
+            null,
+            "pt-br"
+        ],
+        [
+            "S\u00e3o necess\u00e1rios muitos anos de trabalho para ter sucesso da noite para o dia.",
+            "2961\n",
+            null,
+            "pt-br"
+        ],
+        [
+            "You'll have the view of the top of the mountain that you climb.",
+            "LTTS_6574",
+            null,
+            "en"
+        ],
+        [
+            "When you don\u2019t take any risks, you risk everything.",
+            "LTTS_6206",
+            null,
+            "en"
+        ],
+        [
+            "Are necessary too many years of work to succeed overnight.",
+            "LTTS_5717",
+            null,
+            "en"
+        ],
+        [
+            "Je hebt uitzicht op de top van de berg die je beklimt.",
+            "960\n",
+            null,
+            "du"
+        ],
+        [
+            "Als je geen risico neemt, riskeer je alles.",
+            "2450\n",
+            null,
+            "du"
+        ],
+        [
+            "Zijn te veel jaren werk nodig om van de ene op de andere dag te slagen.",
+            "10984\n",
+            null,
+            "du"
+        ],
+        [
+            "Vous aurez la vue sur le sommet de la montagne que vous gravirez.",
+            "6381\n",
+            null,
+            "fr"
+        ],
+        [
+            "Quand tu ne prends aucun risque, tu risques tout.",
+            "2825\n",
+            null,
+            "fr"
+        ],
+        [
+            "Sont n\u00e9cessaires trop d'ann\u00e9es de travail pour r\u00e9ussir du jour au lendemain.",
+            "1844\n",
+            null,
+            "fr"
+        ],
+        [
+            "Sie haben die Aussicht auf die Spitze des Berges, den Sie erklimmen.",
+            "2314\n",
+            null,
+            "ge"
+        ],
+        [
+            "Wer nichts riskiert, riskiert alles.",
+            "7483\n",
+            null,
+            "ge"
+        ],
+        [
+            "Es sind zu viele Jahre Arbeit notwendig, um \u00fcber Nacht erfolgreich zu sein.",
+            "12461\n",
+            null,
+            "ge"
+        ],
+        [
+            "Avrai la vista della cima della montagna che sali.",
+            "4998\n",
+            null,
+            "it"
+        ],
+        [
+            "Quando non corri alcun rischio, rischi tutto.",
+            "6744\n",
+            null,
+            "it"
+        ],
+        [
+            "Are necessary too many years of work to succeed overnight.",
+            "1157\n",
+            null,
+            "it"
+        ],
+        [
+            "B\u0119dziesz mie\u0107 widok na szczyt g\u00f3ry, na kt\u00f3r\u0105 si\u0119 wspinasz.",
+            "7014\n",
+            null,
+            "pl"
+        ],
+        [
+            "Kiedy nie podejmujesz \u017cadnego ryzyka, ryzykujesz wszystko.",
+            "3492\n",
+            null,
+            "pl"
+        ],
+        [
+            "Potrzebne s\u0105 zbyt wiele lat pracy, aby odnie\u015b\u0107 sukces z dnia na dzie\u0144.",
+            "1890\n",
+            null,
+            "pl"
+        ],
+        [
+            "Tendr\u00e1s la vista de la cima de la monta\u00f1a que subes",
+            "101\n",
+            null,
+            "sp"
+        ],
+        [
+            "Cuando no te arriesgas, lo arriesgas todo.",
+            "5922\n",
+            null,
+            "sp"
+        ],
+        [
+            "Son necesarios demasiados a\u00f1os de trabajo para triunfar de la noche a la ma\u00f1ana.",
+            "10246\n",
+            null,
+            "sp"
+        ]
+    ],
+    "eval_split_max_size": null,
+    "eval_split_size": 0.01,
+    "use_speaker_weighted_sampler": false,
+    "speaker_weighted_sampler_alpha": 1.0,
+    "use_language_weighted_sampler": true,
+    "language_weighted_sampler_alpha": 1.0,
+    "use_length_weighted_sampler": false,
+    "length_weighted_sampler_alpha": 1.0,
+    "model_args": {
+        "num_chars": 266,
+        "out_channels": 513,
+        "spec_segment_size": 62,
+        "hidden_channels": 192,
+        "hidden_channels_ffn_text_encoder": 768,
+        "num_heads_text_encoder": 2,
+        "num_layers_text_encoder": 10,
+        "kernel_size_text_encoder": 3,
+        "dropout_p_text_encoder": 0.1,
+        "dropout_p_duration_predictor": 0.5,
+        "kernel_size_posterior_encoder": 5,
+        "dilation_rate_posterior_encoder": 1,
+        "num_layers_posterior_encoder": 16,
+        "kernel_size_flow": 5,
+        "dilation_rate_flow": 1,
+        "num_layers_flow": 4,
+        "resblock_type_decoder": "2",
+        "resblock_kernel_sizes_decoder": [
+            3,
+            7,
+            11
+        ],
+        "resblock_dilation_sizes_decoder": [
+            [
+                1,
+                3,
+                5
+            ],
+            [
+                1,
+                3,
+                5
+            ],
+            [
+                1,
+                3,
+                5
+            ]
+        ],
+        "upsample_rates_decoder": [
+            8,
+            8,
+            2,
+            2
+        ],
+        "upsample_initial_channel_decoder": 512,
+        "upsample_kernel_sizes_decoder": [
+            16,
+            16,
+            4,
+            4
+        ],
+        "periods_multi_period_discriminator": [
+            2,
+            3,
+            5,
+            7,
+            11
+        ],
+        "use_sdp": true,
+        "noise_scale": 1.0,
+        "inference_noise_scale": 0.3,
+        "length_scale": 1.5,
+        "noise_scale_dp": 0.6,
+        "inference_noise_scale_dp": 0.3,
+        "max_inference_len": null,
+        "init_discriminator": true,
+        "use_spectral_norm_disriminator": false,
+        "use_speaker_embedding": false,
+        "num_speakers": 1244,
+        "speakers_file": "checkpoints/speakers.pth",
+        "d_vector_file": "speaker_embeddings/d_vector_all.json",
+        "speaker_embedding_channels": 512,
+        "use_d_vector_file": true,
+        "d_vector_dim": 512,
+        "detach_dp_input": true,
+        "use_language_embedding": true,
+        "embedded_language_dim": 4,
+        "num_languages": 3,
+        "language_ids_file": "checkpoints/language_ids.json",
+        "use_speaker_encoder_as_loss": false,
+        "speaker_encoder_config_path": "checkpoints/config_se.json",
+        "speaker_encoder_model_path": "checkpoints/model_se.pth",
+        "condition_dp_on_speaker": true,
+        "freeze_encoder": false,
+        "freeze_DP": false,
+        "freeze_PE": false,
+        "freeze_flow_decoder": false,
+        "freeze_waveform_decoder": false,
+        "encoder_sample_rate": null,
+        "interpolate_z": true,
+        "reinit_DP": false,
+        "reinit_text_encoder": false
+    },
+    "lr_gen": 0.0002,
+    "lr_disc": 0.0002,
+    "lr_scheduler_gen": "ExponentialLR",
+    "lr_scheduler_gen_params": {
+        "gamma": 0.999875,
+        "last_epoch": -1
+    },
+    "lr_scheduler_disc": "ExponentialLR",
+    "lr_scheduler_disc_params": {
+        "gamma": 0.999875,
+        "last_epoch": -1
+    },
+    "kl_loss_alpha": 1.0,
+    "disc_loss_alpha": 1.0,
+    "gen_loss_alpha": 1.0,
+    "feat_loss_alpha": 1.0,
+    "mel_loss_alpha": 45.0,
+    "dur_loss_alpha": 1.0,
+    "speaker_encoder_loss_alpha": 9.0,
+    "return_wav": true,
+    "r": 1,
+    "num_speakers": 0,
+    "use_speaker_embedding": false,
+    "speaker_embedding_channels": 256,
+    "use_language_embedding": false,
+    "use_d_vector_file": false,
+    "d_vector_file": null,
+    "d_vector_dim": 0
+}

@@ -1,0 +1,43 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: nurc-tts-training-
+  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.22, pipelines.kubeflow.org/pipeline_compilation_time: '2026-03-24T15:21:39.706300',
+    pipelines.kubeflow.org/pipeline_spec: '{"description": "NURC TTS.", "name": "NURC
+      TTS Training"}'}
+  labels: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.22}
+spec:
+  entrypoint: nurc-tts-training
+  templates:
+  - name: nurc-tts-train-task
+    container:
+      command: [python, recipes/multilingual/cml_yourtts/train_syntacc.py, --config_path
+          "/app/recipes/multilingual/cml_yourtts/config.json"]
+      image: sidleal/nurc-tts-training:0.2
+      resources:
+        limits: {cpu: '4', memory: 32Gi, nvidia.com/mig-2g.20gb: '1'}
+        requests: {cpu: '4', memory: 32Gi}
+      volumeMounts:
+      - {mountPath: /dev/shm, name: dshm}
+      - {mountPath: /opt/training, name: pvolume-b88a82482a1ad8ffa4898856e1b99213698f24d229b159a44a92b46}
+    tolerations:
+    - {effect: NoExecute, key: region, operator: Equal, value: pipeline}
+    metadata:
+      labels:
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.22
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+      annotations: {pipelines.kubeflow.org/component_spec: '{"inputs": [{"name": "n_gpus",
+          "type": "Integer"}], "name": "Syntacc tts task"}'}
+    volumes:
+    - emptyDir: {medium: Memory, sizeLimit: 2Gi}
+      name: dshm
+    - name: pvolume-b88a82482a1ad8ffa4898856e1b99213698f24d229b159a44a92b46
+      persistentVolumeClaim: {claimName: sidleal-speech-training}
+  - name: nurc-tts-training
+    dag:
+      tasks:
+      - {name: nurc-tts-train-task, template: nurc-tts-train-task}
+  arguments:
+    parameters: []
+  serviceAccountName: pipeline-runner

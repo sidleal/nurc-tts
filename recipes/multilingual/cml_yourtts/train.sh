@@ -1,0 +1,1 @@
+python3 train_syntacc.py --config_path "..TTS/recipes/multilingual/cml_yourtts/config.json"

@@ -1,0 +1,1 @@
+docker push sidleal/nurc-tts-training:$1
