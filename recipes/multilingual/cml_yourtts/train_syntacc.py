@@ -567,7 +567,7 @@ config = VitsConfig(
         ["ent\u00e3o a carpa \u00e9 um \u00e9 um mato um pouco maior, mais volumoso, n\u00e9.", "SP_D2_015_SPEAKER_3", None, "sao_paulo"],
         ["voc\u00eas podem falar \u00e0 vontade conversar entre si","NURC_RE_D2_005_Doc-ue",None,"recife"],
         ["\u00e9 uma coisa mais ou menos assim mam\u00e3e \u00e9 quem faz eu nunca fa\u00e7o n\u00e3o","NURC_RE_D2_008_Inf1-ue",None,"recife"],
-        ["agora pronto depois voc\u00ea descobrir mais outro tamb\u00e9m"," NURC_RE_D2_008_Inf2-ue",None,"recife"],
+        ["agora pronto depois voc\u00ea descobrir mais outro tamb\u00e9m","NURC_RE_D2_008_Inf2-ue",None,"recife"],
         # ["falaremos sobre agricultura, n\u00c1?","SPEAKER 1", None, "sao_paulo"],
         # ["e se pagava, apenas a cada dois meses","SPEAKER 2", None, "sao_paulo"],
         # ["ele det\u00e9m a propriedade da empresa.", "SPEAKER 0", None, "sao_paulo"],
