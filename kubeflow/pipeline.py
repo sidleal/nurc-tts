@@ -6,7 +6,7 @@ from kubernetes import client as k8s_client
 def syntacc_tts_task(n_gpus: int):
     comp = dsl.ContainerOp(
         name='nurc-tts-train-task',
-        image='sidleal/nurc-tts-training:0.4',
+        image='sidleal/nurc-tts-training:0.8',
         command=['python', 'recipes/multilingual/cml_yourtts/train_syntacc.py', '--config_path "/app/recipes/multilingual/cml_yourtts/config.json"'],
         #python3 recipes/multilingual/cml_yourtts/train_syntacc.py --config_path "/app/recipes/multilingual/cml_yourtts/config.json"
         #command=["torchrun", f"--nproc-per-node={n_gpus}", "distil-whisper-train.py"],
@@ -25,12 +25,34 @@ def nurc_tts_pipeline():
     train_task.set_cpu_limit('4')
     train_task.set_memory_request('32Gi')
     train_task.set_memory_limit('32Gi')
-    train_task.container.resources.limits['nvidia.com/mig-2g.20gb'] = '1'
-    train_task.container.resources.limits.pop('nvidia.com/gpu', None)
+    #train_task.container.resources.limits['nvidia.com/mig-2g.20gb'] = '1'
+    train_task.container.resources.limits['nvidia.com/gpu'] = '1'
+    #train_task.container.resources.limits.pop('nvidia.com/gpu', None)
+
+
+    #from kubernetes.client import V1Affinity, V1NodeAffinity, V1NodeSelector, V1NodeSelectorTerm, V1NodeSelectorRequirement
+    # affinity = V1Affinity(
+    #     node_affinity=V1NodeAffinity(
+    #         required_during_scheduling_ignored_during_execution=V1NodeSelector(
+    #             node_selector_terms=[
+    #                 V1NodeSelectorTerm(
+    #                     match_expressions=[
+    #                         V1NodeSelectorRequirement(
+    #                             key="nvidia.com/gpu.product",
+    #                             operator="In",
+    #                             values=["NVIDIA-H100-80G-HBM3"]
+    #                         )
+    #                     ]
+    #                 )
+    #             ]
+    #         )
+    #     )
+    # )
+    # train_task.add_affinity(affinity)
 
     # train_task.node_selector = {
-    #     #"nvidia.com/gpu.product": "NVIDIA-GeForce-RTX-4090"
-    #     "nvidia.com/gpu.product": "mig-2g.20gb"
+    #     #"nvidia.com/gpu.product": "NVIDIA-GeForce-RTX-4090"    
+    #     "nvidia.com/gpu.product": "NVIDIA-H100-80G-HBM3"
     # }
 
     from kubernetes.client import V1Toleration
