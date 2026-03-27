@@ -46,7 +46,7 @@ BATCH_SIZE = 12
 
 # Training Sampling rate and the target sampling rate for resampling the downloaded dataset (Note: If you change this you might need to redownload the dataset !!)
 # Note: If you add new datasets, please make sure that the dataset sampling rate and this parameter are matching, otherwise resample your audios
-SAMPLE_RATE = 44000
+SAMPLE_RATE = 24000
 
 
 DASHBOARD_LOGGER="tensorboard"
@@ -525,7 +525,7 @@ config = VitsConfig(
     batch_size=BATCH_SIZE,
     batch_group_size=48,
     eval_batch_size=BATCH_SIZE,
-    num_loader_workers=4,
+    num_loader_workers=2,
     eval_split_max_size=256,
     print_step=50,
     plot_step=100,
@@ -554,7 +554,7 @@ config = VitsConfig(
         is_sorted=True,
     ),
     phoneme_cache_path=None,
-    precompute_num_workers=6,
+    precompute_num_workers=3,
     start_by_longest=True,
     datasets=DATASETS_CONFIG_LIST,
     cudnn_benchmark=False,
