@@ -52,7 +52,7 @@
     "cudnn_benchmark": false,
     "training_seed": 54321,
     "model": "vits",
-    "num_loader_workers": 8,
+    "num_loader_workers": 4,
     "num_eval_loader_workers": 0,
     "use_noise_augment": false,
     "audio": {
@@ -95,7 +95,7 @@
     "compute_f0": false,
     "compute_energy": false,
     "compute_linear_spec": true,
-    "precompute_num_workers": 12,
+    "precompute_num_workers": 6,
     "start_by_longest": true,
     "shuffle": false,
     "drop_last": false,
