@@ -42,7 +42,7 @@ RESTORE_PATH = "/app/checkpoints_yourtts_cml_tts_dataset/best_model.pth"  # Down
 SKIP_TRAIN_EPOCH = False
 
 # Set here the batch size to be used in training and evaluation
-BATCH_SIZE = 26
+BATCH_SIZE = 12
 
 # Training Sampling rate and the target sampling rate for resampling the downloaded dataset (Note: If you change this you might need to redownload the dataset !!)
 # Note: If you add new datasets, please make sure that the dataset sampling rate and this parameter are matching, otherwise resample your audios
@@ -58,8 +58,8 @@ LOGGER_URI = None
 
 
 # Max audio length in seconds to be used in training (every audio bigger than it will be ignored)
-MAX_AUDIO_LEN_IN_SECONDS = float("inf")
-
+# MAX_AUDIO_LEN_IN_SECONDS = float("inf")
+MAX_AUDIO_LEN_IN_SECONDS = 15
 # Hugging Face dataset setup (nilc-nlp/nurc_tts)
 USE_HF_NURC_DATASET = True
 HF_DATASET_ID = "nilc-nlp/nurc_tts"
