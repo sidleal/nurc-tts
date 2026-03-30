@@ -62,7 +62,8 @@ LOGGER_URI = None
 MAX_AUDIO_LEN_IN_SECONDS = 15
 # Hugging Face dataset setup (nilc-nlp/nurc_tts)
 USE_HF_NURC_DATASET = True
-HF_DATASET_ID = "nilc-nlp/nurc_tts"
+HF_DATASET_ID = "sidleal/nurc_tts_24khz"
+#HF_DATASET_ID = "nilc-nlp/nurc_tts"
 HF_ACCENT_SPLITS = ("sao_paulo", "recife")
 HF_LOCAL_DATA_ROOT = os.path.join(CURRENT_PATH, "datasets", "nurc_tts")
 HF_MAX_SAMPLES_PER_SPLIT = None  # Set an int for quick debugging (e.g., 2000)
