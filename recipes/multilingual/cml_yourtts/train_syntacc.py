@@ -625,7 +625,7 @@ print(f">>>AQUI ESTA O RUN_NAME: run_name={config.run_name}")
 print(f">>>AQUI ESTA O OUTPUT_PATH: output_path={OUT_PATH}")
 print(">>> EXECUTION MODE: script defaults (without --config_path).")
 print(f">>>\OOOO/ effective output_path={OUT_PATH}")
-print(f">>>\OOOO ESPERADO/ expected run directory={os.path.join(OUT_PATH, config.run_name)}")
+print(f">>>\OOOO ESPERADO: expected run directory={os.path.join(OUT_PATH, config.run_name)}")
 print(f">>>AQUI ESTA O TRAIN_SAMPLES: train_samples={len(train_samples)}")
 print(f">>>AQUI ESTA O EVAL_SAMPLES: eval_samples={len(eval_samples)}")
 print(
