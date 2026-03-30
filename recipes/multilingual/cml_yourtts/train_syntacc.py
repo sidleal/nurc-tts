@@ -105,11 +105,18 @@ def _run_from_config_path_if_provided() -> bool:
     train_args.parse_args(args)
 
     if not args.config_path:
+        print(">>> EXECUTION MODE: script defaults (no --config_path).")
         return False
 
     config = load_config(args.config_path)
     if len(config_overrides) > 0:
         config.parse_known_args(config_overrides, relaxed_parser=True)
+
+    resolved_run_path = os.path.join(config.output_path, config.run_name)
+    print(">>> EXECUTION MODE: --config_path provided.")
+    print(f">>> config_path={args.config_path}")
+    print(f">>> effective output_path={config.output_path}")
+    print(f">>> expected run directory={resolved_run_path}")
 
     for dataset_conf in config.datasets:
         dataset_path = Path(dataset_conf.path)
@@ -616,6 +623,9 @@ trainer = Trainer(
 print(">>> TRAINING OVERVIEW")
 print(f">>>AQUI ESTA O RUN_NAME: run_name={config.run_name}")
 print(f">>>AQUI ESTA O OUTPUT_PATH: output_path={OUT_PATH}")
+print(">>> EXECUTION MODE: script defaults (without --config_path).")
+print(f">>> effective output_path={OUT_PATH}")
+print(f">>> expected run directory={os.path.join(OUT_PATH, config.run_name)}")
 print(f">>>AQUI ESTA O TRAIN_SAMPLES: train_samples={len(train_samples)}")
 print(f">>>AQUI ESTA O EVAL_SAMPLES: eval_samples={len(eval_samples)}")
 print(
