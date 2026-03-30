@@ -33,8 +33,8 @@ CURRENT_PATH = os.path.dirname(os.path.abspath(__file__))
 RUN_NAME = "YourTTS-Syntacc-PT_NURC"
 
 # Path where you want to save the models outputs (configs, checkpoints and tensorboard logs)
-OUT_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "runs")  # "/raid/coqui/Checkpoints/original-YourTTS/"
-
+# OUT_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "runs")  # "/raid/coqui/Checkpoints/original-YourTTS/"
+OUT_PATH = "/opt/training/syntacc/TTS/NURC/runs"
 # If you want to do transfer learning and speedup your training you can set here the path to the CML-TTS available checkpoint that cam be downloaded here:  https://drive.google.com/u/2/uc?id=1yDCSJ1pFZQTHhL09GMbOrdjcPULApa0p
 RESTORE_PATH = "/app/checkpoints_yourtts_cml_tts_dataset/best_model.pth"  # Download the checkpoint here:  https://drive.google.com/u/2/uc?id=1yDCSJ1pFZQTHhL09GMbOrdjcPULApa0p
 
