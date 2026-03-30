@@ -26,8 +26,8 @@
     "mixed_precision": false,
     "precision": "fp16",
     "epochs": 1000,
-    "batch_size": 12,
-    "eval_batch_size": 12,
+    "batch_size": 6,
+    "eval_batch_size": 6,
     "grad_clip": [
         1000,
         1000
