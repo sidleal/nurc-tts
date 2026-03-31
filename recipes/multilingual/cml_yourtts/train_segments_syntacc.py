@@ -192,11 +192,6 @@ def _build_speaker_name(inquiry_id: str, raw_speaker_name: str) -> str:
     return _sanitize_speaker_name(combined_speaker_name)
 
 
-def _build_speaker_count_key(raw_speaker_name: str) -> str:
-    """Count by speaker identity only (ignore inquiry prefix)."""
-    return _sanitize_speaker_name(raw_speaker_name)
-
-
 def _select_top_speakers_for_split(dataset, split_name: str, excluded_inquiries: set, top_k: int):
     speaker_counts = Counter()
     skipped_inquiry = 0
@@ -215,15 +210,18 @@ def _select_top_speakers_for_split(dataset, split_name: str, excluded_inquiries:
             continue
 
         raw_speaker_name = (item.get("speaker") or "unknown").strip()
-        speaker_key = _build_speaker_count_key(raw_speaker_name)
-        speaker_counts[speaker_key] += 1
+        print(f">>>AQUI ESTA O RAW_SPEAKER_NAME: {raw_speaker_name}")
+        print(f">>>AQUI ESTA O INQUIRY_ID: {inquiry_id}")
+        speaker_name = _build_speaker_name(inquiry_id, raw_speaker_name)
+        print(f">>>AQUI ESTA O SPEAKER_NAME: {speaker_name}")
+        speaker_counts[speaker_name] += 1
 
     ranked = sorted(speaker_counts.items(), key=lambda kv: (-kv[1], kv[0]))
     if top_k is None or top_k <= 0:
         selected_ranked = ranked
     else:
         selected_ranked = ranked[:top_k]
-    selected_speaker_keys = {speaker for speaker, _ in selected_ranked}
+    selected_speakers = {speaker for speaker, _ in selected_ranked}
 
     print(
         f">>> Split '{split_name}': found {len(ranked)} speakers after base filtering "
@@ -238,7 +236,7 @@ def _select_top_speakers_for_split(dataset, split_name: str, excluded_inquiries:
         preview_str = ", ".join([f"{speaker}:{count}" for speaker, count in preview])
         print(f">>> Split '{split_name}': top speakers preview => {preview_str}")
 
-    return selected_speaker_keys
+    return selected_speakers
 
 
 def _write_wav_int16(file_path: Path, audio_array, sample_rate: int) -> None:
@@ -282,7 +280,7 @@ def prepare_nurc_tts_split(split_name: str, output_root: str, max_samples: int =
     if rebuild_metadata:
         print(f">>> Preparing Hugging Face split '{split_name}' from {HF_DATASET_ID}")
         dataset = load_dataset(HF_DATASET_ID, split=split_name)
-        selected_speaker_keys = _select_top_speakers_for_split(
+        selected_speakers = _select_top_speakers_for_split(
             dataset=dataset,
             split_name=split_name,
             excluded_inquiries=excluded_inquiries,
@@ -310,9 +308,8 @@ def prepare_nurc_tts_split(split_name: str, output_root: str, max_samples: int =
                     continue
 
                 raw_speaker_name = (item.get("speaker") or "unknown").strip()
-                speaker_key = _build_speaker_count_key(raw_speaker_name)
                 speaker_name = _build_speaker_name(inquiry_id, raw_speaker_name)
-                if speaker_key not in selected_speaker_keys:
+                if speaker_name not in selected_speakers:
                     total_skipped_speaker_filter += 1
                     continue
                 print(
