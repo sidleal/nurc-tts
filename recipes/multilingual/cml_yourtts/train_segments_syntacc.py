@@ -377,6 +377,46 @@ def build_nurc_tts_configs():
         sample_speakers[split_name] = sample_speaker or "unknown"
     return dataset_configs, sample_speakers
 
+
+def build_test_sentences(dataset_configs, num_per_split: int = 3):
+    test_sentences = []
+    for dataset_conf in dataset_configs:
+        split_name = dataset_conf.language
+        #print(f">>>AQUI ESTA O SPLIT_NAME: {split_name}")
+        metadata_path = Path(dataset_conf.path) / dataset_conf.meta_file_train
+        #print(f">>>AQUI ESTA O METADATA_PATH: {metadata_path}")
+        seen_speakers = {}  # speaker_name -> text
+        #print(f">>>AQUI ESTA O SEEN_SPEAKERS: {seen_speakers}")
+        try:
+            with metadata_path.open("r", encoding="utf-8") as f:
+                reader = csv.reader(f, delimiter="|")
+                #print(f">>>AQUI ESTA O READER: {reader}")
+                next(reader, None)  # skip header
+                #print(f">>>AQUI ESTA O NEXT: {next(reader, None)}")
+                for row in reader:
+                    if len(row) < 3:
+                        continue
+                    _, text, speaker_name = row[0], row[1].strip(), row[2].strip()
+                    #print(f">>>AQUI ESTA O TEXT: {text}")
+                    #print(f">>>AQUI ESTA O SPEAKER_NAME: {speaker_name}")
+                    if speaker_name and text and speaker_name not in seen_speakers:
+                        seen_speakers[speaker_name] = text
+                        #print(f">>>AQUI ESTA O SEEN_SPEAKERS: {seen_speakers}")
+                    if len(seen_speakers) >= num_per_split:
+                        break
+        except Exception as exc:
+            print(f">>> build_test_sentences: could not read {metadata_path}: {exc}")
+            continue
+        for speaker_name, text in seen_speakers.items():
+            test_sentences.append([text, speaker_name, None, split_name])
+            #print(f">>>AQUI ESTA O TEST_SENTENCES: {test_sentences}")
+        print(
+            f">>> build_test_sentences: split '{split_name}' -> "
+            + ", ".join(seen_speakers.keys())
+        )
+        #print(f">>>AQUI ESTA O PRINT: {print(f">>> build_test_sentences: split '{split_name}' -> " + ", ".join(seen_speakers.keys()))}")
+    return test_sentences
+
 # Define here the datasets config
 # brpb_train_config = BaseDatasetConfig(
 #     formatter="coqui",
@@ -628,20 +668,7 @@ config = VitsConfig(
     cudnn_benchmark=False,
     max_audio_len=SAMPLE_RATE * MAX_AUDIO_LEN_IN_SECONDS,
     mixed_precision=False,
-    test_sentences=[
-                #GUSTAVO: apenas pessoas do treino
-        ["e cinco litros. o alqueire de s\u00e3o paulo? qual \u00e9 o tamanho dele? n\u00e3o, o alqueire","SP_D2_015_SPEAKER_1", None, "sao_paulo"],
-        ["o gado de noite comia o capim e fabricava esterco. ent\u00e3o aqui","SP_D2_015_SPEAKER_2", None, "sao_paulo"],
-        ["ent\u00e3o a carpa \u00e9 um \u00e9 um mato um pouco maior, mais volumoso, n\u00e9.", "SP_D2_015_SPEAKER_3", None, "sao_paulo"],
-        ["voc\u00eas podem falar \u00e0 vontade conversar entre si","NURC_RE_D2_005_Doc-ue",None,"recife"],
-        ["\u00e9 uma coisa mais ou menos assim mam\u00e3e \u00e9 quem faz eu nunca fa\u00e7o n\u00e3o","NURC_RE_D2_008_Inf1-ue",None,"recife"],
-        ["agora pronto depois voc\u00ea descobrir mais outro tamb\u00e9m","NURC_RE_D2_008_Inf2-ue",None,"recife"],
-        # ["falaremos sobre agricultura, n\u00c1?","SPEAKER 1", None, "sao_paulo"],
-        # ["e se pagava, apenas a cada dois meses","SPEAKER 2", None, "sao_paulo"],
-        # ["ele det\u00e9m a propriedade da empresa.", "SPEAKER 0", None, "sao_paulo"],
-      
-        
-    ],
+    test_sentences=build_test_sentences(DATASETS_CONFIG_LIST, num_per_split=3),
  
     # Enable the weighted sampler
     use_weighted_sampler=True,
