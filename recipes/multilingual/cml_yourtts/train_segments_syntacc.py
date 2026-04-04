@@ -584,7 +584,7 @@ for dataset_conf in DATASETS_CONFIG_LIST:
 audio_config = VitsAudioConfig(
     sample_rate=SAMPLE_RATE,
     hop_length=256,
-    win_length=1024,
+    win_length=512,
     fft_size=1024,
     mel_fmin=0.0,
     mel_fmax=None,
@@ -667,7 +667,7 @@ config = VitsConfig(
     datasets=DATASETS_CONFIG_LIST,
     cudnn_benchmark=False,
     max_audio_len=SAMPLE_RATE * MAX_AUDIO_LEN_IN_SECONDS,
-    mixed_precision=False,
+    mixed_precision=True,
     test_sentences=build_test_sentences(DATASETS_CONFIG_LIST, num_per_split=3),
  
     # Enable the weighted sampler
