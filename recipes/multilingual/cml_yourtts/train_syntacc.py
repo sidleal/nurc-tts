@@ -8,9 +8,10 @@ from TTS.bin.resample import resample_files
 from TTS.config.shared_configs import BaseDatasetConfig
 from TTS.tts.configs.vits_config import VitsConfig
 from TTS.tts.datasets import load_tts_samples
-from TTS.tts.models.vits import CharactersConfig, Vits, VitsArgs, VitsAudioConfig
+from TTS.tts.models.vits import CharactersConfig, Vits, VitsArgs, VitsAudioConfig, VitsDataset
 from TTS.utils.downloaders import download_libri_tts
-
+from torch.utils.data import DataLoader
+from TTS.utils.samplers import PerfectBatchSampler
 torch.set_num_threads(24)
 
 # pylint: disable=W0105
@@ -21,116 +22,57 @@ torch.set_num_threads(24)
 CURRENT_PATH = os.path.dirname(os.path.abspath(__file__))
 
 # Name of the run for the Trainer
-RUN_NAME = "YourTTS-CML-TTS"
+RUN_NAME = "YourTTS-Syntacc-PT_continue"
 
 # Path where you want to save the models outputs (configs, checkpoints and tensorboard logs)
-OUT_PATH = os.path.dirname(os.path.abspath(__file__))  # "/raid/coqui/Checkpoints/original-YourTTS/"
+OUT_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "runs")  # "/raid/coqui/Checkpoints/original-YourTTS/"
 
 # If you want to do transfer learning and speedup your training you can set here the path to the CML-TTS available checkpoint that cam be downloaded here:  https://drive.google.com/u/2/uc?id=1yDCSJ1pFZQTHhL09GMbOrdjcPULApa0p
-RESTORE_PATH = "/raid/edresson/CML_YourTTS/checkpoints_yourtts_cml_tts_dataset/best_model.pth"  # Download the checkpoint here:  https://drive.google.com/u/2/uc?id=1yDCSJ1pFZQTHhL09GMbOrdjcPULApa0p
+RESTORE_PATH = "/raid/datasets/MUPE/Experiments/runs/YourTTS-Syntacc-PT-January-28-2024_09+50AM-5f5841de1/best_model_88444.pth"  # Download the checkpoint here:  https://drive.google.com/u/2/uc?id=1yDCSJ1pFZQTHhL09GMbOrdjcPULApa0p
 
 # This paramter is useful to debug, it skips the training epochs and just do the evaluation  and produce the test sentences
 SKIP_TRAIN_EPOCH = False
 
 # Set here the batch size to be used in training and evaluation
-BATCH_SIZE = 32
+BATCH_SIZE = 26
 
 # Training Sampling rate and the target sampling rate for resampling the downloaded dataset (Note: If you change this you might need to redownload the dataset !!)
 # Note: If you add new datasets, please make sure that the dataset sampling rate and this parameter are matching, otherwise resample your audios
 SAMPLE_RATE = 24000
 
+
+DASHBOARD_LOGGER="tensorboard"
+LOGGER_URI = None 
+
+DASHBOARD_LOGGER = "clearml"
+LOGGER_URI = "s3://coqui-ai-models/TTS/Checkpoints/YourTTS/MUPE/"
+
+
+
 # Max audio length in seconds to be used in training (every audio bigger than it will be ignored)
 MAX_AUDIO_LEN_IN_SECONDS = float("inf")
 
-### Download CML-TTS dataset
-# You need to download the dataset for all languages manually and extract it to a path and then set the CML_DATASET_PATH to this path: https://github.com/freds0/CML-TTS-Dataset#download
-CML_DATASET_PATH = "./datasets/CML-TTS-Dataset/"
-
-
-### Download LibriTTS dataset
-# it will automatic download the dataset, if you have problems you can comment it and manually donwload and extract it ! Download link: https://www.openslr.org/resources/60/train-clean-360.tar.gz
-LIBRITTS_DOWNLOAD_PATH = "./datasets/LibriTTS/"
-# Check if LibriTTS dataset is not already downloaded, if not download it
-if not os.path.exists(LIBRITTS_DOWNLOAD_PATH):
-    print(">>> Downloading LibriTTS dataset:")
-    download_libri_tts(LIBRITTS_DOWNLOAD_PATH, subset="libri-tts-clean-360")
-
-# init LibriTTS configs
-libritts_config = BaseDatasetConfig(
-    formatter="libri_tts",
-    dataset_name="libri_tts",
-    meta_file_train="",
-    meta_file_val="",
-    path=os.path.join(LIBRITTS_DOWNLOAD_PATH, "train-clean-360/"),
-    language="en",
+# Define here the datasets config
+recife_train_config = BaseDatasetConfig(
+    formatter="coqui",
+    dataset_name="nurc",
+    meta_file_train="metadata_coqui_brpb.csv",
+    path="/raid/datasets/MUPE/dataset/mupe/",
+    language="recife"
 )
 
-# init CML-TTS configs
-pt_config = BaseDatasetConfig(
-    formatter="cml_tts",
-    dataset_name="cml_tts",
-    meta_file_train="train.csv",
-    meta_file_val="",
-    path=os.path.join(CML_DATASET_PATH, "cml_tts_dataset_portuguese_v0.1/"),
-    language="pt-br",
+sao_paulo_train_config = BaseDatasetConfig(
+    formatter="coqui",
+    dataset_name="nurc",
+    meta_file_train="metadata_coqui_brba.csv",
+    path="/raid/datasets/MUPE/dataset/mupe/",
+    language="sao_paulo"
 )
 
-pl_config = BaseDatasetConfig(
-    formatter="cml_tts",
-    dataset_name="cml_tts",
-    meta_file_train="train.csv",
-    meta_file_val="",
-    path=os.path.join(CML_DATASET_PATH, "cml_tts_dataset_polish_v0.1/"),
-    language="pl",
-)
 
-it_config = BaseDatasetConfig(
-    formatter="cml_tts",
-    dataset_name="cml_tts",
-    meta_file_train="train.csv",
-    meta_file_val="",
-    path=os.path.join(CML_DATASET_PATH, "cml_tts_dataset_italian_v0.1/"),
-    language="it",
-)
+# bres_train_config, brpi_train_config  no files found 
+DATASETS_CONFIG_LIST = [recife_train_config, sao_paulo_train_config]
 
-fr_config = BaseDatasetConfig(
-    formatter="cml_tts",
-    dataset_name="cml_tts",
-    meta_file_train="train.csv",
-    meta_file_val="",
-    path=os.path.join(CML_DATASET_PATH, "cml_tts_dataset_french_v0.1/"),
-    language="fr",
-)
-
-du_config = BaseDatasetConfig(
-    formatter="cml_tts",
-    dataset_name="cml_tts",
-    meta_file_train="train.csv",
-    meta_file_val="",
-    path=os.path.join(CML_DATASET_PATH, "cml_tts_dataset_dutch_v0.1/"),
-    language="du",
-)
-
-ge_config = BaseDatasetConfig(
-    formatter="cml_tts",
-    dataset_name="cml_tts",
-    meta_file_train="train.csv",
-    meta_file_val="",
-    path=os.path.join(CML_DATASET_PATH, "cml_tts_dataset_german_v0.1/"),
-    language="ge",
-)
-
-sp_config = BaseDatasetConfig(
-    formatter="cml_tts",
-    dataset_name="cml_tts",
-    meta_file_train="train.csv",
-    meta_file_val="",
-    path=os.path.join(CML_DATASET_PATH, "cml_tts_dataset_spanish_v0.1/"),
-    language="sp",
-)
-
-# Add here all datasets configs Note: If you want to add new datasets, just add them here and it will automatically compute the speaker embeddings (d-vectors) for this new dataset :)
-DATASETS_CONFIG_LIST = [libritts_config, pt_config, pl_config, it_config, fr_config, du_config, ge_config, sp_config]
 
 ### Extract speaker embeddings
 SPEAKER_ENCODER_CHECKPOINT_PATH = (
@@ -143,7 +85,7 @@ D_VECTOR_FILES = []  # List of speaker embeddings/d-vectors to be used during th
 # Iterates all the dataset configs checking if the speakers embeddings are already computated, if not compute it
 for dataset_conf in DATASETS_CONFIG_LIST:
     # Check if the embeddings weren't already computed, if not compute it
-    embeddings_file = os.path.join(dataset_conf.path, "speakers.pth")
+    embeddings_file = os.path.join(dataset_conf.path, f"H_ASP_speaker_embeddings_{dataset_conf.language}.pth")
     if not os.path.isfile(embeddings_file):
         print(f">>> Computing the speaker embeddings for the {dataset_conf.dataset_name} dataset")
         compute_embeddings(
@@ -176,6 +118,8 @@ audio_config = VitsAudioConfig(
 
 # Init VITSArgs setting the arguments that are needed for the YourTTS model
 model_args = VitsArgs(
+    inference_noise_scale=0.33,
+    inference_noise_scale_dp=0.33,
     spec_segment_size=62,
     hidden_channels=192,
     hidden_channels_ffn_text_encoder=768,
@@ -192,8 +136,11 @@ model_args = VitsArgs(
     # Useful parameters to enable the Speaker Consistency Loss (SCL) described in the paper
     use_speaker_encoder_as_loss=False,
     # Useful parameters to enable multilingual training
-    use_language_embedding=True,
+    use_language_embedding=False,
     embedded_language_dim=4,
+    use_adaptive_weight_text_encoder=True,
+    use_perfect_class_batch_sampler=True,
+    perfect_class_batch_sampler_key="language"
 )
 
 # General training config, here you can change the batch size and others useful parameters
@@ -201,12 +148,12 @@ config = VitsConfig(
     output_path=OUT_PATH,
     model_args=model_args,
     run_name=RUN_NAME,
-    project_name="YourTTS",
+    project_name="SYNTACC",
     run_description="""
-            - YourTTS trained using CML-TTS and LibriTTS datasets
+            - YourTTS with SYNTACC text encoder
         """,
-    dashboard_logger="tensorboard",
-    logger_uri=None,
+    dashboard_logger=DASHBOARD_LOGGER,
+    logger_uri=LOGGER_URI,
     audio=audio_config,
     batch_size=BATCH_SIZE,
     batch_group_size=48,
@@ -219,7 +166,7 @@ config = VitsConfig(
     save_step=5000,
     save_n_checkpoints=2,
     save_checkpoints=True,
-    target_loss="loss_1",
+    # target_loss="loss_1",
     print_eval=False,
     use_phonemes=False,
     phonemizer="espeak",
@@ -247,55 +194,13 @@ config = VitsConfig(
     max_audio_len=SAMPLE_RATE * MAX_AUDIO_LEN_IN_SECONDS,
     mixed_precision=False,
     test_sentences=[
-        ["Voc\u00ea ter\u00e1 a vista do topo da montanha que voc\u00ea escalar.", "9351", None, "pt-br"],
-        ["Quando voc\u00ea n\u00e3o corre nenhum risco, voc\u00ea arrisca tudo.", "12249", None, "pt-br"],
-        [
-            "S\u00e3o necess\u00e1rios muitos anos de trabalho para ter sucesso da noite para o dia.",
-            "2961",
-            None,
-            "pt-br",
-        ],
-        ["You'll have the view of the top of the mountain that you climb.", "LTTS_6574", None, "en"],
-        ["When you don\u2019t take any risks, you risk everything.", "LTTS_6206", None, "en"],
-        ["Are necessary too many years of work to succeed overnight.", "LTTS_5717", None, "en"],
-        ["Je hebt uitzicht op de top van de berg die je beklimt.", "960", None, "du"],
-        ["Als je geen risico neemt, riskeer je alles.", "2450", None, "du"],
-        ["Zijn te veel jaren werk nodig om van de ene op de andere dag te slagen.", "10984", None, "du"],
-        ["Vous aurez la vue sur le sommet de la montagne que vous gravirez.", "6381", None, "fr"],
-        ["Quand tu ne prends aucun risque, tu risques tout.", "2825", None, "fr"],
-        [
-            "Sont n\u00e9cessaires trop d'ann\u00e9es de travail pour r\u00e9ussir du jour au lendemain.",
-            "1844",
-            None,
-            "fr",
-        ],
-        ["Sie haben die Aussicht auf die Spitze des Berges, den Sie erklimmen.", "2314", None, "ge"],
-        ["Wer nichts riskiert, riskiert alles.", "7483", None, "ge"],
-        ["Es sind zu viele Jahre Arbeit notwendig, um \u00fcber Nacht erfolgreich zu sein.", "12461", None, "ge"],
-        ["Avrai la vista della cima della montagna che sali.", "4998", None, "it"],
-        ["Quando non corri alcun rischio, rischi tutto.", "6744", None, "it"],
-        ["Are necessary too many years of work to succeed overnight.", "1157", None, "it"],
-        [
-            "B\u0119dziesz mie\u0107 widok na szczyt g\u00f3ry, na kt\u00f3r\u0105 si\u0119 wspinasz.",
-            "7014",
-            None,
-            "pl",
-        ],
-        ["Kiedy nie podejmujesz \u017cadnego ryzyka, ryzykujesz wszystko.", "3492", None, "pl"],
-        [
-            "Potrzebne s\u0105 zbyt wiele lat pracy, aby odnie\u015b\u0107 sukces z dnia na dzie\u0144.",
-            "1890",
-            None,
-            "pl",
-        ],
-        ["Tendr\u00e1s la vista de la cima de la monta\u00f1a que subes", "101", None, "sp"],
-        ["Cuando no te arriesgas, lo arriesgas todo.", "5922", None, "sp"],
-        [
-            "Son necesarios demasiados a\u00f1os de trabajo para triunfar de la noche a la ma\u00f1ana.",
-            "10246",
-            None,
-            "sp",
-        ],
+
+        ["e cinco litros. o alqueire de s\u00e3o paulo? qual \u00e9 o tamanho dele? n\u00e3o, o alqueire","SP_D2_015_SPEAKER_1", None, "sao_paulo"],
+        ["o gado de noite comia o capim e fabricava esterco. ent\u00e3o aqui","SP_D2_015_SPEAKER_2", None, "sao_paulo"],
+        ["ent\u00e3o a carpa \u00e9 um \u00e9 um mato um pouco maior, mais volumoso, n\u00e9.", "SP_D2_015_SPEAKER_3", None, "sao_paulo"],
+        ["voc\u00eas podem falar \u00e0 vontade conversar entre si","NURC_RE_D2_005_Doc-ue",None,"recife"],
+        ["\u00e9 uma coisa mais ou menos assim mam\u00e3e \u00e9 quem faz eu nunca fa\u00e7o n\u00e3o","NURC_RE_D2_008_Inf1-ue",None,"recife"],
+        ["agora pronto depois voc\u00ea descobrir mais outro tamb\u00e9m"," NURC_RE_D2_008_Inf2-ue",None,"recife"],
     ],
     # Enable the weighted sampler
     use_weighted_sampler=True,
@@ -314,6 +219,29 @@ config = VitsConfig(
     speaker_encoder_loss_alpha=9.0,
 )
 
+
+EXCLUDED_INQUIRIES = [
+    "SP_DID_052",
+    "SP_DID_065",
+    "SP_DID_102",
+    "SP_DID_110",
+    "SP_DID_014",
+    "SP_DID_023",
+    "SP_DID_027",
+    "SP_DID_031",
+    "RE_DID_001",
+    "RE_DID_013",
+    "RE_DID_025",
+    "RE_DID_037",
+    "RE_DID_045",
+    "RE_DID_044",
+    "RE_DID_032",
+    "RE_DID_058",
+]
+
+def exclude_inquiries(samples, excluded):
+    return [s for s in samples if not any(exc in s["inquiry"] for exc in excluded)]
+
 # Load all the datasets samples and split traning and evaluation sets
 train_samples, eval_samples = load_tts_samples(
     config.datasets,
@@ -322,12 +250,15 @@ train_samples, eval_samples = load_tts_samples(
     eval_split_size=config.eval_split_size,
 )
 
+train_samples = exclude_inquiries(train_samples, EXCLUDED_INQUIRIES)
+eval_samples = exclude_inquiries(eval_samples, EXCLUDED_INQUIRIES)
+
 # Init the model
 model = Vits.init_from_config(config)
 
 # Init the trainer and 🚀
 trainer = Trainer(
-    TrainerArgs(restore_path=RESTORE_PATH, skip_train_epoch=SKIP_TRAIN_EPOCH),
+    TrainerArgs(restore_path=RESTORE_PATH, skip_train_epoch=SKIP_TRAIN_EPOCH, start_with_eval=True),
     config,
     output_path=OUT_PATH,
     model=model,
