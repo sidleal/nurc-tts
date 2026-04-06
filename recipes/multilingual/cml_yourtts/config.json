@@ -57,7 +57,7 @@
     "use_noise_augment": false,
     "audio": {
         "fft_size": 1024,
-        "sample_rate": 44000,
+        "sample_rate": 24000,
         "win_length": 1024,
         "hop_length": 256,
         "num_mels": 80,
