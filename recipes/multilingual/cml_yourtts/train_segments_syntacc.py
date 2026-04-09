@@ -64,7 +64,8 @@ USE_HF_NURC_DATASET = True
 HF_DATASET_ID = "sidleal/nurc_tts_24khz"
 #HF_DATASET_ID = "nilc-nlp/nurc_tts"
 HF_ACCENT_SPLITS = ("sao_paulo", "recife")
-HF_LOCAL_DATA_ROOT = os.path.join(CURRENT_PATH, "datasets", "nurc_tts")
+HF_LOCAL_DATA_ROOT = "/opt/training/syntacc/datasets/nurc_tts"
+# HF_LOCAL_DATA_ROOT = os.path.join(CURRENT_PATH, "datasets", "nurc_tts")
 HF_MAX_SAMPLES_PER_SPLIT = None  # Set an int for quick debugging (e.g., 2000)
 HF_TOP_SPEAKERS_PER_SPLIT = 50  
 HF_EXCLUDED_INQUIRIES = {
@@ -90,7 +91,7 @@ HF_EXCLUDED_INQUIRIES = {
     },
 }
 HF_FORCE_REBUILD_METADATA = True  # Keep True to ensure inquiry filters are always applied.
-
+os.makedirs(HF_LOCAL_DATA_ROOT, exist_ok=True)
 
 @dataclass
 class TrainSyntaccArgs(TrainerArgs):
